@@ -31,3 +31,7 @@ Le programme contient une liste de positions (repos, prise, dépôt, retour au r
 Le bras fait une séquence automatique, il part de sa position de repos, se tourne et s'abaisse vers la gauche (position de prise), se déplace vers la droite (position de dépôt), puis revient au repos. Il répète cela en boucle, sans que personne n'ait à le toucher.
 
 Le projet montre donc qu'avec un peu de code, on peut faire bouger un mécanisme avec précision, et que le bras possède 3 degrés de liberté, un par servomoteur.
+
+## Lien Tinkerkad
+
+https://www.tinkercad.com/things/8b1tPWSaJs5-terrific-kasi
