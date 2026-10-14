@@ -1,0 +1,74 @@
+#include <Servo.h>
+
+// --- Broches des servomoteurs ---
+const int PIN_BASE   = 9;   // Servo 1 : rotation de la base
+const int PIN_EPAULE = 10;  // Servo 2 : épaule
+const int PIN_COUDE  = 11;  // Servo 3 : coude
+
+Servo servoBase;
+Servo servoEpaule;
+Servo servoCoude;
+
+// Angles actuels (position de départ)
+int angleBase   = 90;
+int angleEpaule = 90;
+int angleCoude  = 90;
+
+// Vitesse : délai en ms entre chaque degré (plus grand = plus lent)
+const int VITESSE = 15;
+
+// --- Positions : {base, épaule, coude} ---
+const int NB_POSITIONS = 4;
+int positions[NB_POSITIONS][3] = {
+  {90,  90,  90},   // 0 : repos
+  {30,  60, 120},   // 1 : position de prise (à gauche, bras baissé)
+  {150, 60, 120},   // 2 : position de dépôt (à droite, bras baissé)
+  {90,  90,  90}    // 3 : retour au repos
+};
+
+// Déplace les 3 servos en même temps, en douceur, vers la cible
+void deplacerBras(int cibleBase, int cibleEpaule, int cibleCoude) {
+  while (angleBase != cibleBase || angleEpaule != cibleEpaule || angleCoude != cibleCoude) {
+    if (angleBase < cibleBase) angleBase++;
+    else if (angleBase > cibleBase) angleBase--;
+
+    if (angleEpaule < cibleEpaule) angleEpaule++;
+    else if (angleEpaule > cibleEpaule) angleEpaule--;
+
+    if (angleCoude < cibleCoude) angleCoude++;
+    else if (angleCoude > cibleCoude) angleCoude--;
+
+    servoBase.write(angleBase);
+    servoEpaule.write(angleEpaule);
+    servoCoude.write(angleCoude);
+    delay(VITESSE);
+  }
+}
+
+void setup() {
+  Serial.begin(9600);
+
+  servoBase.attach(PIN_BASE);
+  servoEpaule.attach(PIN_EPAULE);
+  servoCoude.attach(PIN_COUDE);
+
+  // Position initiale
+  servoBase.write(angleBase);
+  servoEpaule.write(angleEpaule);
+  servoCoude.write(angleCoude);
+  delay(1000);
+
+  Serial.println("Bras robotique pret.");
+}
+
+void loop() {
+  for (int i = 0; i < NB_POSITIONS; i++) {
+    Serial.print("Position ");
+    Serial.println(i);
+
+    deplacerBras(positions[i][0], positions[i][1], positions[i][2]);
+    delay(1000);  // pause pour bien voir la position atteinte
+  }
+
+  delay(2000);  // pause avant de recommencer la séquence
+}
